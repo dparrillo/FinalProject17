@@ -19,3 +19,7 @@ Skills belong under two categories: Experience skills and Quest Skills:
     Quest skills are acquired by completing specific objectives. ...if 'questname' in completed_quests: skills+= 'questskill'
 
 Players do not win in the sense that 'You Win!' appears, but rather in the sense that 'The End' appears.
+
+
+Document with initial and progressing thoughts as well as the technicalities of the level up and skills system, also sample code for the skills class which I have not added to the code yet because I haven't yet convinced myself that skills need a class:
+https://docs.google.com/document/d/1O7KGxD_YjQGqC-1ESo04zVlwlkrOQ4CzLmQeE2t-ZZ8/edit?usp=sharing
