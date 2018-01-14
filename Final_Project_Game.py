@@ -1,9 +1,10 @@
 import random
 
 class Eagle():
-    def __init__ (self, name = 'Hey you!', faction = 'faction'):
+    def __init__ (self, name = 'Hey you!', faction = 'faction', level = 0):
         self.name = name
         self.faction = faction
+        self.level = level
 
     def determine_name(self):
         self.name = input("\nWhat is your name? > ")
@@ -22,6 +23,11 @@ class Eagle():
             else:
                 print(error_message)
 
+    def level_up(self):
+        if len(completed_quests) == (self.level-1)**2:
+            self.level += 1
+            print(f"You leveled up! Level {self.level}")
+
 acceptable_inputs = []
 completed_quests = []
 incomplete_quests = []
@@ -31,7 +37,11 @@ incomplete_quests = []
 innate_quests = []
 total_quests = []
 
+npcs = []
+met_npcs = {}
+
 error_message = 'Not recognizable. Possible problems: spelling, capitalization, bad input'
+
 def user_input():
     while True:
         a = input()
@@ -87,9 +97,60 @@ class Quest():
             incomplete_quests.remove(self.title)
             completed_quests.append(self.title)
 
+def complete(character, quest):
+    quest.complete_quest()
+    character.level_up()
+
+class Mob():
+    def __init__(self, animal = 'placeholder', level = 0):
+        self.animal = animal
+        self.level = level
+        self.animal_level()
+        self.animal_name()
+
+    def animal_level(self):
+        self.level = random.randint(0,10)
+
+    def animal_name(self):
+        if self.level <= 5:
+            self.animal = random.choice(["rabbit", "groundhog", "squirrel", "mouse"])
+        elif self.level > 5 and self.level <= 10:
+            self.animal = random.choice(["snake", "deer", "pheasant", "fox"])
+
+class NPC():
+    def __init__(self, name, quest):
+        self.name = name
+        self.task = quest
+        npcs.append(self.name)
+
+    def talk(self):
+        met_npcs[self.name] = self.task
+        if self.task == 'none':
+            print(f"I have nothing for you, {character.name}.")
+        else:
+            print(f"{character.name}, listen - I have a task for you.")
+            for n,q in met_npcs.items():
+                if self.name == n:
+                    q.read()
+                if input("Do you accept this quest? (y/n) ") == 'y':
+                    incomplete_quests.append(self.task.title)
+                break
+
+# def talk_to_acceptable():
+    # NPC.talk() should be moved to acceptable_inputs if the player is in a certain area (that the NPC is in)
+
+    #  ignore this until you figure out the locatoins
+    #   for n in met_npcs.keys():
+    #       if n+".talk()" not in acceptable_inputs:
+    #         acceptable_inputs.append(f"{n}"+".talk()")
+
 character = Eagle()
 
 Learning_to_Fly = Quest("Learning_to_Fly", 'learn to fly', 'fly', 'innate')
+Hello = Quest('Hello', 'hi', 'hey', 'category')
+
+Larry = NPC('Larry', Learning_to_Fly)
+Pat = NPC('Pat', Hello)
 
 print("""PROLOGUE :
 
@@ -127,3 +188,5 @@ acceptable_inputs.append("log()")
 user_input()
 print("""Wow! Look at that! You only have one thing left to do, although that probably won't last very long. Remember, you can always check your
 to-do list by typing log(). I wonder what 'Learning to Fly' means? Let's read that mental list of yours.""")
+
+
