@@ -203,6 +203,7 @@ class Eagle():
         self.home_area()
 
     def home_area(self):
+        """just enables you to talk to the npcs in the area, and shows you who you can interact with"""
         z = get_key(self.location)
         if len(game_map[z]) > 1:
             for accept in acceptable_inputs:
@@ -216,6 +217,8 @@ class Eagle():
                 print(f'\nYou see {item}.')
 
     def pick_up(self, item):
+        """adds items to the inventory with a max item limit of 2 (2 legs)"""
+        # not called by the player, called by meeting conditions when you have quests or by killing an animal
         if sum(self.inventory.values()) < 2:
             if item not in self.inventory.keys():
                 self.inventory[item] = 1
@@ -236,6 +239,8 @@ class Eagle():
                 else:
                     print(error_message)
     def let_go(self, item):
+        """drops an item"""
+        # also not called by the player
         if item in self.inventory.keys():
             self.inventory[item]-=1
             if self.inventory[item] == 0:
@@ -257,18 +262,24 @@ met_npcs = {}
 error_message = 'Not recognizable. Possible problems: spelling, capitalization, bad input'
 
 def i():
+    """command to print the inventory"""
     print(character.inventory)
 def actions():
+    """MAJOR COMMAND - a player who doesn't use this command will be lost and confused"""
     print(acceptable_inputs)
 def where_am_i():
+    """for use in comparing the location to the game map"""
     character.where()
 def fly(direction):
+    """aestetic command for flying, instead of character.move('direction')"""
     character.move(direction)
 cardinal = ['north', 'south', 'east', 'west']
 def fly_to_acceptable():
+    """allows you to fly"""
     for item in cardinal:
         acceptable_inputs.append('fly(\''+f"{item}"+'\')')
 def user_input_tutor():
+    """WHILE the INPUTS. This prevents the game crashing if they input an unrecognizable command"""
     while True:
         a = input()
         if a == acceptable_inputs[-1]:
