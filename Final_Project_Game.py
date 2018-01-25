@@ -5,7 +5,7 @@ import math # for use later when leveling up
 game_map = {0:['town0'], 1:['steppe1'], 2:['steppe2'], 3:['town3'], 4:['town4'], 5:['river5'], 6:['river6'], 7:['river7'], 8:['river8'], 9:['river9'], 10:['steppe10'], 11:['steppe11'], 12:['steppe12'], 13:['steppe13'], 14:['steppe14'], 15:['river15'], 16:['river16'], 17:['Mt Hood'], 18:['river18'], 19:['The Tongass'], 20:['town20'], 21:['steppe21'], 22:['steppe22'], 23:['steppe23'], 24:['steppe24'], 25:['steppe25'], 26:['river26'], 27:['river27'], 28:['river28'], 29:['Wenatchee'], 30:['steppe30'], 31:['steppe31'], 32:['steppe32'], 33:['steppe33'], 34:['hills34'], 35:['hills35'], 36:['hills36'], 37:['river37'], 38:['Nordrassil', 'Glenn'], 39:['steppe39'], 40:['hills40'], 41:['hills41'], 42:['hills42'], 43:['steppe43'], 44:['hills44'], 45:['Mt Antero'], 46:['hills46'], 47:['river47'], 48:['steppe48'], 49:['steppe49'], 50:['hills50'], 51:['Longs Peak', 'Baine'], 52:['hills52'], 53:['steppe53'], 54:['hills54'], 55:['hills55'], 56:['river56'], 57:['river57'], 58:['steppe58'], 59:['steppe59'], 60:['hills60'], 61:['hills61'], 62:['hills62'], 63:['lake63'], 64:['lake64'], 65:['river65'], 66:['river66'], 67:['grassland67'], 68:['grassland68'], 69:['grassland69'], 70:['steppe70'], 71:['steppe71'], 72:['steppe72'], 73:['lake73'], 74:['lake74'], 75:['grassland75'], 76:['hills76'], 77:['hills77'], 78:['hills78'], 79:['grassland79'], 80:['hills80'], 81:['hills81'], 82:['river82'], 83:['lake83'], 84:['lake84'], 85:['grassland85'], 86:['hills86'], 87:['Aerie Peak'], 88:['hills88'], 89:['grassland89'], 90:['Grays Peak'], 91:['hills91'], 92:['river92'], 93:['grassland93'], 94:['grassland94'], 95:['grassland95'], 96:['grassland96'], 97:['hills97'], 98:['hills98'], 99:['grassland99']}
 
 def location(v):
-    # takes the location of the character and turns it into an aestetically pleasing word ex.(hills is more game friendly than hills42, but the player can still find exactly which hills by using where am i)
+    """takes the location of the character and turns it into an aestetically pleasing word ex.(hills is more game friendly than hills42, but the player can still find exactly which hills by using where am i"""
     # the player does not call this function, it is called automatically when they move around on the map
     if 'hills' in v:
         return 'hills'
@@ -49,14 +49,16 @@ def location(v):
     else:
         return v
 def get_key(b):
-    # this function is not original - i found it on stack overflow - it returns the key of a dictionary given the item
+    """this function is not original - i found it on stack overflow - it returns the key of a dictionary given the item"""
     for k, v in game_map.items():
         # for use in moving the character - see Eagle.move()
         if v[0] == b:
             return k
 
 class Eagle():
+    """the character class for the player - the player instance"""
     def __init__ (self, name = 'Hey you!', faction = 'faction', level = 0, location = 'location', skill_number = 0, inventory = {}):
+        """initialized when the character is made - given a preset name, faction, level, location, skill_number, and empty inventory. The name and faction are edited later by user inputs."""
         self.name = name
         self.faction = faction
         self.level = level
@@ -65,9 +67,11 @@ class Eagle():
         self.inventory = inventory
 
     def determine_name(self):
+        """here is when the name changes"""
         self.name = input("\nWhat is your name? > ")
 
     def determine_faction(self):
+        """here is when the faction changes"""
         while True:
             self.faction = input("\nOnly one question remains - are you a cliff-soarer, or a tree-eagle? > ")
             if self.faction == "cliff-soarer":
@@ -83,6 +87,7 @@ class Eagle():
                 print(error_message)
 
     def init_loc(self):
+        """called depending on the faction name. Determines where the character starts and adds the talking ability for the npcs in the area to actions list"""
         if self.faction == 'cliff-soarer':
             self.location = game_map[51][0]
             for item in game_map[51]:
@@ -97,6 +102,7 @@ class Eagle():
             acceptable_inputs.remove(f'{game_map[38][0]}'+'.talk()')
 
     def level_up(self):
+        """The math for leveling up. Should be called after every quest handed in"""
         # if self.level == math.sqrt(len(completed_quests) - 2) - 1: (for use only if content gets really big)
         if self.level == math.sqrt(len(completed_quests)-1):
             self.level += 1
@@ -104,9 +110,11 @@ class Eagle():
             print(f"You leveled up! Level {self.level}")
 
     def where(self):
+        """for use in the 'where am i' function"""
         print(self.location)
 
     def move(self, direction):
+        """code for moving around on the coordinate grid. takes into account the fight instances and npcs in home areas"""
         z = get_key(self.location)
         if direction == 'north':
             if list(str(z))[-1] == '9':
